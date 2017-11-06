@@ -1,18 +1,17 @@
-<<<<<<< HEAD
 import java.awt.*;
 
 public class Particle {
   private Point location = new Point(0, 0);
-  private int speedx, speedy, radius;
+  private int radius, speed, heading;
   private Color color = Color.WHITE;
   private int maxSpeed = 20;
 
-  public Particle(int radius, int x, int y, int speedx, int speedy){
+  public Particle(int radius, int x, int y, int speed, int heading){
     this.radius = radius;
     location.x = x;
     location.y = y;
-    this.speedx = speedx;
-    this.speedy = speedy;
+    this.speed = speed;
+    this.heading = heading;
   }
 
   public int calcDistance(Particle other){
@@ -21,12 +20,15 @@ public class Particle {
     return (int)Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2 ));
   }
 
-  public void move(){
-    location.x += speedx;
-    location.y += speedy;
+  public void move(int newHeading){
+    heading = newHeading;
+    location.x += speed * Math.cos(Math.toRadians(newHeading));
+    location.y += speed * Math.sin(Math.toRadians(newHeading));
     //need to get canvas width and height.. or just ignore it i guess
-    if (location.x > 1000 - radius || location.x <= 0) {speedx = - speedx;}
-    if (location.y > 800 - radius || location.y <= 0) {speedy = - speedy;}
+    if (location.x > 1000 - radius) {location.x -= 1000;}
+    if (location.y > 800 - radius) {location.y -= 800;}
+    if (location.x < 0) {location.x += 1000;}
+    if (location.y < 0) {location.y += 800;}
   }//move
 
   public void draw(Graphics g){
@@ -36,34 +38,5 @@ public class Particle {
 
   public Point getLocation(){return location;}
 
-  // public int getSpeedx() {return speedx;}
-  // public int getSpeedy() {return speedy;}
-  //
-  // public void updateSpeedx(int newSpeed) {
-  //   if(newSpeed <= maxSpeed) speedx = newSpeed;
-  // }
-  // public void updateSpeedy(int newSpeed) {
-  //   if(newSpeed <= maxSpeed) speedy = newSpeed;
-  // }
+  public int getHeading(){return heading;}
 }
-=======
-import java.awt.*;
-
-public class Particle {
-  private int x, y, radius;
-
- public Particle(int x, int y, int radius){
-   this.x = x;
-   this.y = y;
-   this.radius = radius;
- }
-
- public void draw(Graphics g){
-   g.setColor(Color.WHITE);
-   g.drawOval(x, y, radius, radius);
- }
-
- public void getDistance(Particle other){
- }
-}
->>>>>>> origin/master
