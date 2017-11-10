@@ -4,7 +4,7 @@ public class Particle {
   private Point location = new Point(0, 0);
   private int radius, speed, heading;
   private Color color = Color.WHITE;
-  private int maxSpeed = 20;
+  //private int maxSpeed = 20;
 
   public Particle(int radius, int x, int y, int speed, int heading){
     this.radius = radius;
@@ -33,10 +33,12 @@ public class Particle {
 
   public void draw(Graphics g){
     g.setColor(color);
-    g.fillOval(location.x, location.y, radius, radius);
+    g.drawOval(location.x, location.y, radius, radius);
   }
 
-  public Point getLocation(){return location;}
+  public int getSpeed(){return speed;}
+  public void setSpeed(int newSpeed){speed = newSpeed;}
 
+  public Point getLocation(){return location;}
   public int getHeading(){return heading;}
 }
