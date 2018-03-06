@@ -1,32 +1,33 @@
 import java.awt.*;
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Particle {
   //define these in Particle or Simulator class...??
-  // public static final int DEFAULT_SPEED = 20;
-  // public static final int MAX_SPEED = 30;
-  public static final int DEFAULT_REPULSION_RANGE = 40;
-  public static final int DEFAULT_ALIGNMENT_RANGE = 90;
-  public static final int DEFAULT_ATTRACTION_RANGE = 150;
-  public static final int MAX_TURN_DEGREE = 45;
+  public static final int DEFAULT_REPULSION_RANGE = 30;
+  public static final int DEFAULT_ALIGNMENT_RANGE = 80;
+  public static final int DEFAULT_ATTRACTION_RANGE = 210;
+  public static final int MAX_TURN_DEGREE = 35;
+  public static final int CANVAS_WIDTH = 1200;
+  public static final int CANVAS_HEIGHT = 900;
 
   public Point location = new Point(0, 0);
   private int radius, speed, heading;
-  private Color color = Color.WHITE;
+  private Color color;
   private int repulsionRange = DEFAULT_REPULSION_RANGE;
   private int alignmentRange = DEFAULT_ALIGNMENT_RANGE;
   private int attractionRange = DEFAULT_ATTRACTION_RANGE;
 
-  public Particle(int radius, int x, int y, int speed, int heading){
+  public Particle(int radius, int x, int y, int speed, int heading, Color color){
     this.radius = radius;
     location.x = x;
     location.y = y;
     this.speed = speed;
     this.heading = heading;
+    this.color = color;
   }
 
-  //rewriting in progress
   public int calcHeading(ArrayList<Particle> particles) {
     Point repVector = new Point(0, 0); 
     Point aliVector = new Point(0, 0); 
@@ -40,11 +41,14 @@ public class Particle {
       Particle other = particles.get(i);
       int distance = other.calcDistanceToPoint(location);
 
-      if (distance > 0) {
-      //not self
+      if (distance > 0 && !inBlindSpot(other.location)) /*not self & not in blind spot*/ {
+        // if (other.color != Color.WHITE) {
+        //   Point at = mult(sub(other.location, location), 9);
+        //   attVector = add(attVector, at);
+        //   att = true;
+        // }
         if (distance <= repulsionRange) {
-          Point r = normalise(sub(location, other.location));
-          //add weight?
+          Point r = sub(location, other.location);
           repVector = add(repVector, r);
           rep = true;
         }
@@ -55,6 +59,7 @@ public class Particle {
         }
         else if (distance <= attractionRange) {
           Point at = sub(other.location, location);
+          if (other.color != Color.WHITE) at = mult(at, 10);
           attVector = add(attVector, at);
           att = true;
         }
@@ -62,10 +67,10 @@ public class Particle {
     }//for
 
     if (rep) desiredDir = repVector;
-    else if (ali && att) desiredDir = mult(add(normalise(aliVector), attVector), 0.5);
+    else if (ali && att) desiredDir = mult(add(aliVector, attVector), 0.5); 
     else if (ali && !att) desiredDir = aliVector;
     else if (!ali && att) desiredDir = attVector;
-    else desiredDir = normalise(location);
+    else desiredDir = location;
 
     int desiredHeading = (int)Math.toDegrees(Math.atan2(desiredDir.y, desiredDir.x));
 
@@ -78,83 +83,66 @@ public class Particle {
     return desiredHeading;
   }
 
-  // public int calcHeading(ArrayList<Particle> particles) {
-  //   Point target = new Point(0, 0);
-  //   int newHeading = 0;
-  //   int turnDegree;
-  //   int numOfP = 0;
-
-  //   for(int i = 0; i < particles.size(); i++) {
-  //     Particle other = particles.get(i);
-  //     int distance = other.calcDistanceToPoint(location);
-  //     if(distance < attractionRange && distance > 0){
-  //       if (distance > repulsionRange){
-  //         //attraction
-  //         Point att = other.getLocation();
-  //         target = add(target, att);
-  //       }
-  //       else if (distance < repulsionRange) {
-  //         //repulsion
-  //         //highest priority (how?)
-  //         // Point rep = sumPoints(location, subPoints(location, other.getLocation()));
-  //         // target = sumPoints(target, rep);
-  //         target = add(location, sub(location, other.getLocation()));
-  //       }
-  //       else {
-  //         //alignment
-  //         target = add(target, other.getLocation());
-  //       }
-  //     }
-  //     numOfP++;
-  //   }//for
-
-  //   newHeading = (int)Math.toDegrees(Math.atan2(location.y - target.y, target.x - location.x));
-
-  //   turnDegree = newHeading - heading;
-  //   if (Math.abs(turnDegree) > MAX_TURN_DEGREE){
-  //     if (turnDegree > 0) newHeading = heading + MAX_TURN_DEGREE;
-  //     else newHeading = heading - MAX_TURN_DEGREE;
-  //   }
-
-  //   return newHeading;
-  // }//calcHeading
-
   //update particle heading and location, taking edges into consideration
   public void move(int newHeading){
     heading = newHeading;
-    location.x += speed * Math.cos(Math.toRadians(newHeading));
-    location.y += speed * Math.sin(Math.toRadians(newHeading));
+    location.x += speed * Math.cos(Math.toRadians(heading));
+    location.y += speed * Math.sin(Math.toRadians(heading));
 
     //to do
     //need to get actual canvas width and height..
-    if (location.x > 1000) {location.x = 0;}
-    if (location.y > 800) {location.y = 0;}
-    if (location.x < 0) {location.x = 1000;}
-    if (location.y < 0) {location.y = 800;}
+    if (location.x > CANVAS_WIDTH + radius) {location.x = 0;}
+    if (location.y > CANVAS_HEIGHT + radius) {location.y = 0;}
+    if (location.x < -radius) {location.x = CANVAS_WIDTH;}
+    if (location.y < -radius) {location.y = CANVAS_HEIGHT;}
   }//move
-
 
   public Point add(Point p1, Point p2) {return new Point(p1.x + p2.x, p1.y + p2.y);}
   public Point sub(Point p1, Point p2) {return new Point(p1.x - p2.x, p1.y - p2.y);}
   public Point mult(Point p, double i) {return new Point ((int)(p.x*i), (int)(p.y*i));}
-  // public Point normalise(Point p){
-  //   //returns a unit vector
-  //   double magnitude = Math.sqrt(Math.pow(p.x, 2) + Math.pow(p.y, 2));
-  //   return new Point((int)(p.x / magnitude), (int)(p.y / magnitude));
-  // }
 
-  public int calcDistanceToPoint(Point point){
-    int dx = point.x - location.x;
-    int dy = point.y - location.y;
+  public int calcDistanceToPoint(Point p) {
+    int dx = p.x - location.x;
+    int dy = p.y - location.y;
+
+    if(dx >= (CANVAS_WIDTH - Math.abs(dx))) {
+      if(dx > 0) dx = CANVAS_WIDTH - dx;
+      else dx -= CANVAS_WIDTH;
+    }
+
+    if(dy >= (CANVAS_HEIGHT - Math.abs(dy))) {
+      if(dy > 0) dy = CANVAS_HEIGHT - dy;
+      else dy -= CANVAS_HEIGHT;
+    }
+
     return (int)Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
   }
 
-  public void setSpeed(int speed){this.speed = speed;}
-  public void setAttractionRange(int att){attractionRange = att;}
-  public void setRepulsionRange(int rep){repulsionRange = rep;}
+  //to do
+  public boolean inBlindSpot(Point p) {
+    // if(calcDistanceToPoint(p) <= attractionRange) {
+
+    // }
+
+    return false;
+  }
+
+  public boolean equals(Particle p) {
+    if(p==this) return true;
+    else return false;
+  }
+
+  public int hashCode() {
+    return Objects.hash(radius, location.x, location.y, speed, heading, color);
+  }
+
+  public void setSpeed(int speed) {this.speed = speed;}
+  public void setRepulsionRange(int rep) {repulsionRange = rep;}
+  public void setAlignmentRange(int ali) {alignmentRange = ali;}
+  public void setAttractionRange(int att) {attractionRange = att;}
 
   public Point getLocation(){return location;}
-  public int getHeading(){return heading;}
+  public void setLocation(Point p){location = p;}
 
   public void draw(Graphics g){
     g.setColor(color);

@@ -9,6 +9,7 @@ public class Flock{
   }
 
   public void addParticle(Particle p){particles.add(p);}
+  public void removeParticle(Particle p){particles.remove(p);}
 
   public void move(){
     for (int i = 0; i < particles.size(); i++){
@@ -17,8 +18,7 @@ public class Flock{
     }
   }
 
-  //to do
-  public Point calcSomethingIDK(){
+  public Point calcCentre(){
     int xSum = 0;
     int ySum = 0;
     for (int i = 0; i < particles.size(); i++) {
@@ -27,20 +27,26 @@ public class Flock{
     }
 
     int n = particles.size();
-    int pitch = (int)(xSum / n);
-    int loudness = (int)(ySum / n);
-    return new Point(pitch, loudness);
+    int x = (int)(xSum / n);
+    int y = (int)(ySum / n);
+    return new Point(x, y);
   }
 
-  //methods that set the particles' params. for sliders in the simulator class
+  public boolean containsParticle(Particle p){
+    return particles.contains(p);
+  }
+  
   public void setSpeed(int speed){
     for (int i = 0; i < particles.size(); i++){particles.get(i).setSpeed(speed);}
   }
-  public void setAttractionRange(int att){
-    for (int i = 0; i < particles.size(); i++){particles.get(i).setAttractionRange(att);}
-  }
   public void setRepulsionRange(int rep){
     for (int i = 0; i < particles.size(); i++){particles.get(i).setRepulsionRange(rep);}
+  }
+  public void setAlignmentRange(int ali){
+    for (int i = 0; i < particles.size(); i++){particles.get(i).setAlignmentRange(ali);}
+  }
+  public void setAttractionRange(int att){
+    for (int i = 0; i < particles.size(); i++){particles.get(i).setAttractionRange(att);}
   }
 
   public void draw(Graphics g) {
