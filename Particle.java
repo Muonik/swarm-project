@@ -6,7 +6,7 @@ import java.util.Objects;
 public class Particle {
   //define these in Particle or Simulator class...??
   public static final int DEFAULT_REPULSION_RANGE = 30;
-  public static final int DEFAULT_ALIGNMENT_RANGE = 80;
+  public static final int DEFAULT_ALIGNMENT_RANGE = 50;
   public static final int DEFAULT_ATTRACTION_RANGE = 210;
   public static final int MAX_TURN_DEGREE = 35;
   public static final int CANVAS_WIDTH = 1200;
@@ -36,6 +36,7 @@ public class Particle {
     boolean rep = false;
     boolean ali = false;
     boolean att = false;
+    //boolean isAttractor = false;
 
     for (int i = 0; i < particles.size(); i++) {
       Particle other = particles.get(i);
@@ -43,17 +44,18 @@ public class Particle {
 
       if (distance > 0 && !inBlindSpot(other.location)) /*not self & not in blind spot*/ {
         // if (other.color != Color.WHITE) {
-        //   Point at = mult(sub(other.location, location), 9);
-        //   attVector = add(attVector, at);
-        //   att = true;
-        // }
+        //   Point at = mult(sub(other.location, location),10);
+        //   attractorVector = add(attractorVector, at);
+        //   isAttractor = true;
+        // } 
         if (distance <= repulsionRange) {
           Point r = sub(location, other.location);
           repVector = add(repVector, r);
           rep = true;
         }
         else if (distance <= alignmentRange) {
-          Point al = new Point((int)(Math.cos(Math.toRadians(other.heading))), (int)(Math.sin(Math.toRadians(other.heading))));
+          double h = Math.toRadians(other.heading);
+          Point al = new Point((int)(Math.cos(h)), (int)(Math.sin(h)));
           aliVector = add(aliVector, al);
           ali = true;
         }
@@ -66,6 +68,7 @@ public class Particle {
       }
     }//for
 
+    //if (isAttractor) desiredDir = attractorVector;
     if (rep) desiredDir = repVector;
     else if (ali && att) desiredDir = mult(add(aliVector, attVector), 0.5); 
     else if (ali && !att) desiredDir = aliVector;
@@ -89,8 +92,6 @@ public class Particle {
     location.x += speed * Math.cos(Math.toRadians(heading));
     location.y += speed * Math.sin(Math.toRadians(heading));
 
-    //to do
-    //need to get actual canvas width and height..
     if (location.x > CANVAS_WIDTH + radius) {location.x = 0;}
     if (location.y > CANVAS_HEIGHT + radius) {location.y = 0;}
     if (location.x < -radius) {location.x = CANVAS_WIDTH;}
