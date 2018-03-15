@@ -8,7 +8,7 @@ public class Particle {
   public static final int DEFAULT_REPULSION_RANGE = 30;
   public static final int DEFAULT_ALIGNMENT_RANGE = 50;
   public static final int DEFAULT_ATTRACTION_RANGE = 210;
-  public static final int MAX_TURN_DEGREE = 35;
+  public static final int MAX_TURN_DEGREE = 30;
   public static final int CANVAS_WIDTH = 1200;
   public static final int CANVAS_HEIGHT = 900;
 
@@ -32,24 +32,25 @@ public class Particle {
     Point repVector = new Point(0, 0); 
     Point aliVector = new Point(0, 0); 
     Point attVector = new Point(0, 0);
+    //Point attractorVector = new Point(0,0);
     Point desiredDir = new Point(0, 0);
     boolean rep = false;
     boolean ali = false;
     boolean att = false;
-    //boolean isAttractor = false;
+    //boolean attractor = false;
 
     for (int i = 0; i < particles.size(); i++) {
       Particle other = particles.get(i);
-      int distance = other.calcDistanceToPoint(location);
+      Point realLoc = realLocation(location, other.location);
+      int distance = calcDistanceToPoint(realLoc);
 
-      if (distance > 0 && !inBlindSpot(other.location)) /*not self & not in blind spot*/ {
-        // if (other.color != Color.WHITE) {
-        //   Point at = mult(sub(other.location, location),10);
-        //   attractorVector = add(attractorVector, at);
-        //   isAttractor = true;
+      if (distance > 0 && !other.equals(this)) {
+        // if (other.color != Color.WHITE && distance < attractionRange) {
+        //   attractorVector = mult(sub(other.location, location),15);
+        //   attractor = true;
         // } 
         if (distance <= repulsionRange) {
-          Point r = sub(location, other.location);
+          Point r = sub(location, realLoc);
           repVector = add(repVector, r);
           rep = true;
         }
@@ -60,15 +61,14 @@ public class Particle {
           ali = true;
         }
         else if (distance <= attractionRange) {
-          Point at = sub(other.location, location);
-          if (other.color != Color.WHITE) at = mult(at, 10);
+          Point at = sub(realLoc, location);
+          if (other.color != Color.WHITE) at = mult(at, 2000);
           attVector = add(attVector, at);
           att = true;
         }
       }
     }//for
 
-    //if (isAttractor) desiredDir = attractorVector;
     if (rep) desiredDir = repVector;
     else if (ali && att) desiredDir = mult(add(aliVector, attVector), 0.5); 
     else if (ali && !att) desiredDir = aliVector;
@@ -76,19 +76,17 @@ public class Particle {
     else desiredDir = location;
 
     int desiredHeading = (int)Math.toDegrees(Math.atan2(desiredDir.y, desiredDir.x));
-
-    int turnDegree = desiredHeading - heading;
-    if (Math.abs(turnDegree) > MAX_TURN_DEGREE){
-      if (turnDegree > 0) desiredHeading = heading + MAX_TURN_DEGREE;
-      else desiredHeading = heading - MAX_TURN_DEGREE;
-    }
-
     return desiredHeading;
   }
 
-  //update particle heading and location, taking edges into consideration
-  public void move(int newHeading){
-    heading = newHeading;
+  public void move(int desiredHeading){
+    int delta = desiredHeading - heading;
+    if (Math.abs(delta) > MAX_TURN_DEGREE) {
+      if (delta > 0) desiredHeading = heading +  MAX_TURN_DEGREE; 
+      else desiredHeading = heading - MAX_TURN_DEGREE;
+    } 
+    heading = desiredHeading;
+
     location.x += speed * Math.cos(Math.toRadians(heading));
     location.y += speed * Math.sin(Math.toRadians(heading));
 
@@ -96,29 +94,35 @@ public class Particle {
     if (location.y > CANVAS_HEIGHT + radius) {location.y = 0;}
     if (location.x < -radius) {location.x = CANVAS_WIDTH;}
     if (location.y < -radius) {location.y = CANVAS_HEIGHT;}
-  }//move
-
-  public Point add(Point p1, Point p2) {return new Point(p1.x + p2.x, p1.y + p2.y);}
-  public Point sub(Point p1, Point p2) {return new Point(p1.x - p2.x, p1.y - p2.y);}
-  public Point mult(Point p, double i) {return new Point ((int)(p.x*i), (int)(p.y*i));}
+  }
 
   public int calcDistanceToPoint(Point p) {
     int dx = p.x - location.x;
     int dy = p.y - location.y;
-
-    if(dx >= (CANVAS_WIDTH - Math.abs(dx))) {
-      if(dx > 0) dx = CANVAS_WIDTH - dx;
-      else dx -= CANVAS_WIDTH;
-    }
-
-    if(dy >= (CANVAS_HEIGHT - Math.abs(dy))) {
-      if(dy > 0) dy = CANVAS_HEIGHT - dy;
-      else dy -= CANVAS_HEIGHT;
-    }
-
     return (int)Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
   }
 
+  public Point realLocation(Point p,Point other) {
+    int dx = other.x - p.x;
+    int dy = other.y - p.y;
+    int x = other.x;
+    int y = other.y;
+
+    if(dx >= (CANVAS_WIDTH - Math.abs(dx))) {
+      if(dx > 0) x = other.x - CANVAS_WIDTH;
+      else x = other.x + CANVAS_WIDTH;
+    }
+
+    if(dy >= (CANVAS_HEIGHT - Math.abs(dy))) {
+      if(dy > 0) y = other.y -  CANVAS_HEIGHT;
+      else y = other.y + CANVAS_HEIGHT;
+    }
+    return new Point(x,y);
+  }
+
+  public Point add(Point p1, Point p2) {return new Point(p1.x + p2.x, p1.y + p2.y);}
+  public Point sub(Point p1, Point p2) {return new Point(p1.x - p2.x, p1.y - p2.y);}
+  public Point mult(Point p, double i) {return new Point ((int)(p.x*i), (int)(p.y*i));}
   //to do
   public boolean inBlindSpot(Point p) {
     // if(calcDistanceToPoint(p) <= attractionRange) {

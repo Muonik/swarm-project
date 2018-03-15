@@ -54,7 +54,7 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
   public Simulator(int flockSize) {
     this.flockSize = flockSize;
     flock = new Flock();
-    for(int i = 0; i < flockSize; i++) {
+    for(int i = 0; i < (flockSize - 1); i++) {
       flock.addParticle(new Particle(RADIUS, (int)(Math.random()*CANVAS_WIDTH), (int)(Math.random()*CANVAS_HEIGHT), DEFAULT_SPEED, (int)(Math.random() * 360), PARTICLE_COLOR));
     }
     addAttractor();
@@ -76,7 +76,7 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
     setPreferredSize(new Dimension(CANVAS_WIDTH,(CANVAS_HEIGHT+300)));
     setResizable(false);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setTitle("Shittiest Swarm Simulator on Earth");
+    setTitle("shittiest swarm simulator on earth");
     pack();
     setVisible(true);
     requestFocus();
@@ -117,7 +117,7 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
   public void playNote() throws MidiUnavailableException, InvalidMidiDataException {
     Point avr = flock.calcCentre();
     int pitch = (int)(avr.x / 16 + 36);
-    int loudness = (int)(-avr.y / 10 + 180);
+    int loudness = (int)(-avr.y / 10 + 170);
     
     channels[mainChnlNum].programChange(0,mainInstr); //bank and preset of the instrument 
 
@@ -160,7 +160,9 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
     flock1.move();
     Point avr = flock1.calcCentre();
     int pitch = (int)(avr.x / 16 + 40);
-    int loudness = (int)(-avr.y / 10 + 100);
+    int loudness = (int)(-avr.y / 10 + 140);
+
+    if (backgroundInstr == SPACE) loudness -= 145;
     
     channels[backgroundChnlNum].programChange(0,backgroundInstr); 
 

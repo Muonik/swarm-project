@@ -35,6 +35,10 @@ public class Flock{
   public boolean containsParticle(Particle p){
     return particles.contains(p);
   }
+
+  public int getSize() {
+    return particles.size();
+  }
   
   public void setSpeed(int speed){
     for (int i = 0; i < particles.size(); i++){particles.get(i).setSpeed(speed);}

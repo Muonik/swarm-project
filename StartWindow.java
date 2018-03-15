@@ -94,6 +94,7 @@ public class StartWindow extends JFrame {
         startButton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         flockSizeSlider.setBackground(new java.awt.Color(40, 40, 40));
+        flockSizeSlider.setForeground(new Color(233,233,233));
         flockSizeSlider.setFont(new java.awt.Font("Calibri", 0, 16)); // NOI18N
         flockSizeSlider.setMajorTickSpacing(100);
         flockSizeSlider.setMaximum(242);
@@ -166,7 +167,7 @@ public class StartWindow extends JFrame {
         aboutText.setFont(new java.awt.Font("Lucida Sans", 0, 24)); // NOI18N
         aboutText.setForeground(new java.awt.Color(233, 233, 233));
         aboutText.setRows(5);
-        aboutText.setText("a java program that plays\ntrashy hipster experimental music\nbased on couzin's model of flocking\n");
+        aboutText.setText("a java program that plays\ntrashy experimental hipster music\nbased on couzin's model of flocking\n");
         aboutText.setAutoscrolls(false);
         aboutText.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         aboutText.setOpaque(false);
