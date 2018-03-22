@@ -33,7 +33,7 @@ public class Particle {
     Point aliVector = new Point(0, 0); 
     Point attVector = new Point(0, 0);
     //Point attractorVector = new Point(0,0);
-    Point desiredDir = new Point(0, 0);
+    Point desiredDir = new Point((int)Math.cos(Math.toRadians(heading)), (int)Math.sin(Math.toRadians(heading)));
     boolean rep = false;
     boolean ali = false;
     boolean att = false;
@@ -73,7 +73,6 @@ public class Particle {
     else if (ali && att) desiredDir = mult(add(aliVector, attVector), 0.5); 
     else if (ali && !att) desiredDir = aliVector;
     else if (!ali && att) desiredDir = attVector;
-    else desiredDir = location;
 
     int desiredHeading = (int)Math.toDegrees(Math.atan2(desiredDir.y, desiredDir.x));
     return desiredHeading;
@@ -123,6 +122,7 @@ public class Particle {
   public Point add(Point p1, Point p2) {return new Point(p1.x + p2.x, p1.y + p2.y);}
   public Point sub(Point p1, Point p2) {return new Point(p1.x - p2.x, p1.y - p2.y);}
   public Point mult(Point p, double i) {return new Point ((int)(p.x*i), (int)(p.y*i));}
+  
   //to do
   public boolean inBlindSpot(Point p) {
     // if(calcDistanceToPoint(p) <= attractionRange) {

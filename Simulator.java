@@ -25,6 +25,7 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
   public static final Color CANVAS_COLOR = new Color(40,40,40);
   public static final Color PARTICLE_COLOR = new Color(242,242,242);
   public static final Color ATT_COLOR = new Color(0.706f, 0.855f, 0.969f);
+  public static final int RECT_EDGE = 30;
   public static final int UPDATE_INTERVAL = 30; //milliseconds
 
   public static final int[] phrygianScale = {4, 5, 8, 9, 11, 0, 14};
@@ -34,17 +35,21 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
   public static final int CELESTA = 8;
   public static final int SPACE = 91;
 
-  private static int flockSize /* = 242;  //uncomment dis when running sim directly*/ ;
+  private static int flockSize  = 242;  //uncomment dis when running sim directly*/ ;
 
+  private Clip audioClip;
   private Synthesizer synth;
   private MidiChannel[] channels;
   private int mainChnlNum = 4;
   private int backgroundChnlNum = 6;
   private File sample = new File("Oppenheimer.wav");
+  private boolean samplePlaying = false;
   private int[] currentScale;
   private int mainInstr;
   private int backgroundInstr;
   private Particle attractor;
+  private Point avr;
+  private Point invisibleAvr;
 
   private DrawCanvas canvas;
   private JPanel controls;
@@ -58,6 +63,11 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
       flock.addParticle(new Particle(RADIUS, (int)(Math.random()*CANVAS_WIDTH), (int)(Math.random()*CANVAS_HEIGHT), DEFAULT_SPEED, (int)(Math.random() * 360), PARTICLE_COLOR));
     }
     addAttractor();
+
+    flock1 = new Flock();
+    for(int i = 0; i < 20; i++) {
+      flock1.addParticle(new Particle(RADIUS, (int)(Math.random()*CANVAS_WIDTH), (int)(Math.random()*CANVAS_HEIGHT), DEFAULT_SPEED, (int)(Math.random() * 360), PARTICLE_COLOR));
+    }
 
     currentScale = phrygianScale;
     mainInstr = PIANO;
@@ -93,29 +103,26 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
       public void run() {
         while (true) {
           flock.move();
+          flock1.move();
           repaint(); 
           try {
-            playNote();
-            invisibleFlock();
+            playNote();   
+            playInvisibleFlock();
           }
           catch (MidiUnavailableException e) {}
           catch (InvalidMidiDataException e) {}
           try {
             Thread.sleep(UPDATE_INTERVAL); 
-            //channels[4].allNotesOff();
           }
-          catch (InterruptedException e) {/*System.exit(0);*/}
-       }
-       } 
-      };
-     updateThread.start();
-
-    //playSample();
-
+        catch (InterruptedException e) {/*System.exit(0);*/}
+      }
+    } 
+  };
+  updateThread.start();
   }//Simulator
 
   public void playNote() throws MidiUnavailableException, InvalidMidiDataException {
-    Point avr = flock.calcCentre();
+    avr = flock.calcCentre();
     int pitch = (int)(avr.x / 16 + 36);
     int loudness = (int)(-avr.y / 10 + 170);
     
@@ -126,10 +133,6 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
     if(IntStream.of(currentScale).anyMatch(i -> i == rem) && rand == 0){
       channels[mainChnlNum].noteOn(pitch, loudness);
     }
-
-    // try {Thread.sleep(200);} 
-    // catch (InterruptedException e) {}
-    // channels[5].allNotesOff();
     // synth.close();
   }
 
@@ -138,29 +141,20 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
       AudioInputStream audioStream = AudioSystem.getAudioInputStream(sample);
       AudioFormat format = audioStream.getFormat();
       DataLine.Info info = new DataLine.Info(Clip.class, format);
-      Clip audioClip = (Clip) AudioSystem.getLine(info);
+      audioClip = (Clip) AudioSystem.getLine(info);
       audioClip.open(audioStream);
-      audioClip.start();           
-    // try {
-    //   Thread.sleep(2000);
-    // } catch (InterruptedException e) {e.printStackTrace();}
-    //audioClip.close();
+      audioClip.start();
+      samplePlaying = true;           
     }
     catch (UnsupportedAudioFileException e) {e.printStackTrace();} 
     catch (LineUnavailableException e) {e.printStackTrace();} 
     catch (IOException e) {e.printStackTrace();}
   }
 
-  public void invisibleFlock() throws MidiUnavailableException, InvalidMidiDataException {
-  //a second flock that is not drawn. generates background music 
-    flock1 = new Flock();
-    for(int i = 0; i < 20; i++) {
-      flock1.addParticle(new Particle(RADIUS, (int)(Math.random()*CANVAS_WIDTH), (int)(Math.random()*CANVAS_HEIGHT), DEFAULT_SPEED, (int)(Math.random() * 360), PARTICLE_COLOR));
-    }
-    flock1.move();
-    Point avr = flock1.calcCentre();
-    int pitch = (int)(avr.x / 16 + 40);
-    int loudness = (int)(-avr.y / 10 + 140);
+  public void playInvisibleFlock() throws MidiUnavailableException, InvalidMidiDataException {
+    invisibleAvr = flock1.calcCentre();
+    int pitch = (int)(invisibleAvr.x / 16 + 40);
+    int loudness = (int)(-invisibleAvr.y / 10 + 140);
 
     if (backgroundInstr == SPACE) loudness -= 145;
     
@@ -264,7 +258,7 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
         JSlider source = (JSlider)e.getSource();
         if (!source.getValueIsAdjusting()) {
          flock.setSpeed((int)source.getValue());
-         //flock1.setSpeed((int)source.getValue());
+         flock1.setSpeed((int)source.getValue());
        }
      }
    });
@@ -274,7 +268,7 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
        JSlider source = (JSlider)e.getSource();
        if (!source.getValueIsAdjusting()) {
         flock.setRepulsionRange((int)source.getValue());
-        //flock1.setRepulsionRange((int)source.getValue());
+        flock1.setRepulsionRange((int)source.getValue());
       }
     }
   });
@@ -284,7 +278,7 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
        JSlider source = (JSlider)e.getSource();
        if (!source.getValueIsAdjusting()) {
         flock.setAlignmentRange((int)source.getValue());
-        //flock1.setAlignmentRange((int)source.getValue());
+        flock1.setAlignmentRange((int)source.getValue());
       }
     }
   });
@@ -294,17 +288,23 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
        JSlider source = (JSlider)e.getSource();
        if (!source.getValueIsAdjusting()) {
         flock.setAttractionRange((int)source.getValue());
-        //flock1.setAttractionRange((int)source.getValue());
+        flock1.setAttractionRange((int)source.getValue());
       }
     }
   });
 
     sampleButton.addActionListener(new ActionListener() {
      public void actionPerformed(ActionEvent e) {
-       playSample();
-     }
-   });
-
+       if(!samplePlaying) {
+        playSample();
+        sampleButton.setText("stop");
+      } 
+      else {
+       audioClip.close();
+       sampleButton.setText("play a sample");
+     } 
+   }
+ });
 
     //////////////code generated using netbeans swing gui form//////////////
 
@@ -455,7 +455,9 @@ layout.setVerticalGroup(
         super.paintComponent(g);
         setBackground(CANVAS_COLOR);
         flock.draw(g);
-        //flock1.draw(g);
+        g.setColor(Color.LIGHT_GRAY);
+        g.drawRect((int)(avr.x - RECT_EDGE/2), (int)(avr.y - RECT_EDGE/2), RECT_EDGE, RECT_EDGE);
+        g.drawRect((int)(invisibleAvr.x - RECT_EDGE/2), (int)(invisibleAvr.y - RECT_EDGE/2), RECT_EDGE, RECT_EDGE);
       }
     }
 

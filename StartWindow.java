@@ -218,6 +218,8 @@ public class StartWindow extends JFrame {
         );
 
         pack();
+        
+        /////////////////////////////////////////////////
     }
 
     class Background extends JPanel {
