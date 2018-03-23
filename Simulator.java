@@ -22,10 +22,12 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
   public static final int CANVAS_WIDTH = 1200;
   public static final int CANVAS_HEIGHT = 900;
   public static final int RADIUS = 20;
+  public static final int RECT_EDGE = 30;
   public static final Color CANVAS_COLOR = new Color(40,40,40);
   public static final Color PARTICLE_COLOR = new Color(242,242,242);
   public static final Color ATT_COLOR = new Color(0.706f, 0.855f, 0.969f);
-  public static final int RECT_EDGE = 30;
+  public static final Color AVR_COLOR = Color.YELLOW;
+  public static final Color INVISIBLE_AVR_COLOR = Color.LIGHT_GRAY;
   public static final int UPDATE_INTERVAL = 30; //milliseconds
 
   public static final int[] phrygianScale = {4, 5, 8, 9, 11, 0, 14};
@@ -35,7 +37,7 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
   public static final int CELESTA = 8;
   public static final int SPACE = 91;
 
-  private static int flockSize  = 242;  //uncomment dis when running sim directly*/ ;
+  private static int flockSize /* = 242;  //uncomment dis when running sim directly*/ ;
 
   private Clip audioClip;
   private Synthesizer synth;
@@ -65,7 +67,7 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
     addAttractor();
 
     flock1 = new Flock();
-    for(int i = 0; i < 20; i++) {
+    for(int i = 0; i < (int)(flockSize/2); i++) {
       flock1.addParticle(new Particle(RADIUS, (int)(Math.random()*CANVAS_WIDTH), (int)(Math.random()*CANVAS_HEIGHT), DEFAULT_SPEED, (int)(Math.random() * 360), PARTICLE_COLOR));
     }
 
@@ -217,6 +219,7 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
     JLabel mainInstrLabel = new JLabel("main instrument");
     JLabel backgroundInstrLabel = new JLabel("background instrument");
     JButton sampleButton = new JButton("play a sample");
+    JButton pauseButton = new JButton("freeze swarm");
     JSeparator separator = new JSeparator();
 
     scaleBox.addActionListener(new ActionListener() {
@@ -298,13 +301,25 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
        if(!samplePlaying) {
         playSample();
         sampleButton.setText("stop");
+       } 
+       else {
+        audioClip.close();
+        samplePlaying = false;
+        sampleButton.setText("play a sample");
       } 
-      else {
-       audioClip.close();
-       sampleButton.setText("play a sample");
-     } 
-   }
- });
+    }
+  });
+
+  //   pauseButton.addActionListener(new ActionListener() {
+  //    public void actionPerformed(ActionEvent e) {
+  //      if(!swarmMoving) {
+  //       sleep();
+  //      } 
+  //      else {
+        
+  //     } 
+  //   }
+  // });
 
     //////////////code generated using netbeans swing gui form//////////////
 
@@ -455,8 +470,9 @@ layout.setVerticalGroup(
         super.paintComponent(g);
         setBackground(CANVAS_COLOR);
         flock.draw(g);
-        g.setColor(Color.LIGHT_GRAY);
+        g.setColor(AVR_COLOR);
         g.drawRect((int)(avr.x - RECT_EDGE/2), (int)(avr.y - RECT_EDGE/2), RECT_EDGE, RECT_EDGE);
+        g.setColor(INVISIBLE_AVR_COLOR);
         g.drawRect((int)(invisibleAvr.x - RECT_EDGE/2), (int)(invisibleAvr.y - RECT_EDGE/2), RECT_EDGE, RECT_EDGE);
       }
     }

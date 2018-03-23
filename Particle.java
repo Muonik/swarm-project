@@ -12,9 +12,12 @@ public class Particle {
   public static final int CANVAS_WIDTH = 1200;
   public static final int CANVAS_HEIGHT = 900;
 
+  public static final int ATTRACTOR_STRENGTH = 40;
+  public static final int BLIND_ANGLE = 45;
+
   public Point location = new Point(0, 0);
-  private int radius, speed, heading;
-  private Color color;
+  public int radius, speed, heading;
+  public Color color;
   private int repulsionRange = DEFAULT_REPULSION_RANGE;
   private int alignmentRange = DEFAULT_ALIGNMENT_RANGE;
   private int attractionRange = DEFAULT_ATTRACTION_RANGE;
@@ -32,23 +35,17 @@ public class Particle {
     Point repVector = new Point(0, 0); 
     Point aliVector = new Point(0, 0); 
     Point attVector = new Point(0, 0);
-    //Point attractorVector = new Point(0,0);
     Point desiredDir = new Point((int)Math.cos(Math.toRadians(heading)), (int)Math.sin(Math.toRadians(heading)));
     boolean rep = false;
     boolean ali = false;
     boolean att = false;
-    //boolean attractor = false;
 
     for (int i = 0; i < particles.size(); i++) {
       Particle other = particles.get(i);
       Point realLoc = realLocation(location, other.location);
       int distance = calcDistanceToPoint(realLoc);
 
-      if (distance > 0 && !other.equals(this)) {
-        // if (other.color != Color.WHITE && distance < attractionRange) {
-        //   attractorVector = mult(sub(other.location, location),15);
-        //   attractor = true;
-        // } 
+      if (distance > 0 && !other.equals(this) && !cantSeeYouMyDude(realLoc)) {
         if (distance <= repulsionRange) {
           Point r = sub(location, realLoc);
           repVector = add(repVector, r);
@@ -57,12 +54,13 @@ public class Particle {
         else if (distance <= alignmentRange) {
           double h = Math.toRadians(other.heading);
           Point al = new Point((int)(Math.cos(h)), (int)(Math.sin(h)));
+          //al = mult(al, 0.01);
           aliVector = add(aliVector, al);
           ali = true;
         }
         else if (distance <= attractionRange) {
           Point at = sub(realLoc, location);
-          if (other.color != Color.WHITE) at = mult(at, 2000);
+          if (other.color != this.color) at = mult(at, ATTRACTOR_STRENGTH);
           attVector = add(attVector, at);
           att = true;
         }
@@ -85,6 +83,8 @@ public class Particle {
       else desiredHeading = heading - MAX_TURN_DEGREE;
     } 
     heading = desiredHeading;
+
+    heading += (int)(30 * Math.random() - 15);
 
     location.x += speed * Math.cos(Math.toRadians(heading));
     location.y += speed * Math.sin(Math.toRadians(heading));
@@ -111,7 +111,6 @@ public class Particle {
       if(dx > 0) x = other.x - CANVAS_WIDTH;
       else x = other.x + CANVAS_WIDTH;
     }
-
     if(dy >= (CANVAS_HEIGHT - Math.abs(dy))) {
       if(dy > 0) y = other.y -  CANVAS_HEIGHT;
       else y = other.y + CANVAS_HEIGHT;
@@ -119,17 +118,21 @@ public class Particle {
     return new Point(x,y);
   }
 
+  public boolean cantSeeYouMyDude(Point other) {
+    // double rad = Math.toRadians(heading);
+    // double otherRad = Math.toRadians(other.heading);
+    // Point unitVec = new Point((int)Math.sin(rad), (int)Math.cos(rad))
+    // Point OtherUnitVec = 
+    // Point vec = sub(normalise(), new Point());
+    return false;
+  }
+
   public Point add(Point p1, Point p2) {return new Point(p1.x + p2.x, p1.y + p2.y);}
   public Point sub(Point p1, Point p2) {return new Point(p1.x - p2.x, p1.y - p2.y);}
   public Point mult(Point p, double i) {return new Point ((int)(p.x*i), (int)(p.y*i));}
-  
-  //to do
-  public boolean inBlindSpot(Point p) {
-    // if(calcDistanceToPoint(p) <= attractionRange) {
-
-    // }
-
-    return false;
+  public Point normalise(Point p){
+    double magnitude = Math.sqrt(Math.pow(p.x, 2) + Math.pow(p.y, 2));
+    return new Point((int)(p.x / magnitude), (int)(p.y / magnitude));
   }
 
   public boolean equals(Particle p) {
@@ -151,6 +154,6 @@ public class Particle {
 
   public void draw(Graphics g){
     g.setColor(color);
-    g.fillOval(location.x, location.y, radius, radius);
+    g.fillOval(location.x - radius, location.y - radius, radius, radius);
   }
 }
