@@ -164,17 +164,17 @@ public class StartWindow extends JFrame {
         aboutText.setEditable(false);
         aboutText.setBackground(new java.awt.Color(240, 240, 240));
         aboutText.setColumns(20);
-        aboutText.setFont(new java.awt.Font("Lucida Sans", 0, 24)); // NOI18N
+        aboutText.setFont(new java.awt.Font("Lucida Sans", 0, 24)); 
         aboutText.setForeground(new java.awt.Color(233, 233, 233));
         aboutText.setRows(5);
-        aboutText.setText("a java program that plays\ntrashy experimental hipster music\nbased on couzin's model of flocking\n");
+        aboutText.setText("a java program that interactively plays\ntrashy experimental hipster music\nbased on couzin's model of flocking\n");
         aboutText.setAutoscrolls(false);
         aboutText.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         aboutText.setOpaque(false);
         textScrollPane.setViewportView(aboutText);
 
         okayGotItButton.setBackground(new java.awt.Color(204, 204, 204));
-        okayGotItButton.setFont(new java.awt.Font("Lucida Sans", 0, 21)); // NOI18N
+        okayGotItButton.setFont(new java.awt.Font("Lucida Sans", 0, 21)); 
         okayGotItButton.setForeground(new java.awt.Color(233, 233, 233));
         okayGotItButton.setText("okay got it");
         okayGotItButton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));

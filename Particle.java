@@ -12,11 +12,11 @@ public class Particle {
   public static final int CANVAS_WIDTH = 1200;
   public static final int CANVAS_HEIGHT = 900;
 
-  public static final int ATTRACTOR_STRENGTH = 40;
+  public static final int ATTRACTOR_STRENGTH = 45;
   public static final int BLIND_ANGLE = 45;
 
   public Point location = new Point(0, 0);
-  public int radius, speed, heading;
+  private int radius, speed, heading;
   public Color color;
   private int repulsionRange = DEFAULT_REPULSION_RANGE;
   private int alignmentRange = DEFAULT_ALIGNMENT_RANGE;
@@ -120,10 +120,12 @@ public class Particle {
 
   public boolean cantSeeYouMyDude(Point other) {
     // double rad = Math.toRadians(heading);
-    // double otherRad = Math.toRadians(other.heading);
-    // Point unitVec = new Point((int)Math.sin(rad), (int)Math.cos(rad))
-    // Point OtherUnitVec = 
-    // Point vec = sub(normalise(), new Point());
+    // Point headingVec = normalise( new Point( (int)(20*Math.sin(rad)), (int)(20*Math.cos(rad)) ) );
+    // Point otherVec = normalise(sub(other, this.location));
+    // double product = dotProduct(headingVec, otherVec);
+    // int angle = (int)Math.acos(product/(400));
+    // if (angle > (int)(180 - BLIND_ANGLE/2) ) return true;
+    // else 
     return false;
   }
 
@@ -131,8 +133,14 @@ public class Particle {
   public Point sub(Point p1, Point p2) {return new Point(p1.x - p2.x, p1.y - p2.y);}
   public Point mult(Point p, double i) {return new Point ((int)(p.x*i), (int)(p.y*i));}
   public Point normalise(Point p){
-    double magnitude = Math.sqrt(Math.pow(p.x, 2) + Math.pow(p.y, 2));
-    return new Point((int)(p.x / magnitude), (int)(p.y / magnitude));
+    double mag = magnitude(p);
+    return new Point((int)(20*p.x / mag), (int)(20*p.y / mag));
+  }
+  public double magnitude(Point p){
+    return Math.sqrt(Math.pow(p.x, 2) + Math.pow(p.y, 2));
+  }
+  public double dotProduct(Point p1, Point p2){
+    return p1.x * p2.x + p1.y * p2.y;
   }
 
   public boolean equals(Particle p) {

@@ -25,13 +25,14 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
   public static final int RECT_EDGE = 30;
   public static final Color CANVAS_COLOR = new Color(40,40,40);
   public static final Color PARTICLE_COLOR = new Color(242,242,242);
-  public static final Color ATT_COLOR = new Color(0.706f, 0.855f, 0.969f);
-  public static final Color AVR_COLOR = Color.YELLOW;
-  public static final Color INVISIBLE_AVR_COLOR = Color.LIGHT_GRAY;
+  public static final Color ATT_COLOR = new Color(0.706f, 0.855f, 0.969f); //blueish
+  public static final Color AVR_COLOR = new Color(188, 221, 189); //greenish
+  public static final Color INVISIBLE_AVR_COLOR = new Color(152,152,152); //grey
   public static final int UPDATE_INTERVAL = 30; //milliseconds
 
-  public static final int[] phrygianScale = {4, 5, 8, 9, 11, 0, 14};
-  public static final int[] bluesScale = {4, 6, 7, 8, 11, 13};
+  public static final int[] phrygianScale = {4, 5, 8, 9, 11, 0, 2};
+  public static final int[] bluesScale = {4, 6, 7, 8, 11, 1};
+  public static final int[] hirajoshiScale = {4, 8, 10, 11, 3};
   public static final int PIANO = 2;
   public static final int HARP = 46;
   public static final int CELESTA = 8;
@@ -125,7 +126,7 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
 
   public void playNote() throws MidiUnavailableException, InvalidMidiDataException {
     avr = flock.calcCentre();
-    int pitch = (int)(avr.x / 16 + 36);
+    int pitch = (int)(avr.x / 16 + 30);
     int loudness = (int)(-avr.y / 10 + 170);
     
     channels[mainChnlNum].programChange(0,mainInstr); //bank and preset of the instrument 
@@ -155,7 +156,7 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
 
   public void playInvisibleFlock() throws MidiUnavailableException, InvalidMidiDataException {
     invisibleAvr = flock1.calcCentre();
-    int pitch = (int)(invisibleAvr.x / 16 + 40);
+    int pitch = (int)(invisibleAvr.x / 16 + 30);
     int loudness = (int)(-invisibleAvr.y / 10 + 140);
 
     if (backgroundInstr == SPACE) loudness -= 145;
@@ -219,7 +220,7 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
     JLabel mainInstrLabel = new JLabel("main instrument");
     JLabel backgroundInstrLabel = new JLabel("background instrument");
     JButton sampleButton = new JButton("play a sample");
-    JButton pauseButton = new JButton("freeze swarm");
+    JButton tipsButton = new JButton("tips");
     JSeparator separator = new JSeparator();
 
     scaleBox.addActionListener(new ActionListener() {
@@ -228,7 +229,8 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
         JComboBox scl = (JComboBox)e.getSource();
         String selectedScale = (String)scl.getSelectedItem();
         if (selectedScale.equals("phrygian")) currentScale = phrygianScale;
-        else if (selectedScale.equals("blues")) currentScale = bluesScale;      
+        else if (selectedScale.equals("blues")) currentScale = bluesScale;
+        else if (selectedScale.equals("hirajoshi")) currentScale = hirajoshiScale;      
       }
     });
 
@@ -301,8 +303,8 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
        if(!samplePlaying) {
         playSample();
         sampleButton.setText("stop");
-       } 
-       else {
+      } 
+      else {
         audioClip.close();
         samplePlaying = false;
         sampleButton.setText("play a sample");
@@ -316,7 +318,7 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
   //       sleep();
   //      } 
   //      else {
-        
+
   //     } 
   //   }
   // });
@@ -327,7 +329,7 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
     setPreferredSize(new java.awt.Dimension(1200, 320));
 
     scaleBox.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); 
-    scaleBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "phrygian", "blues"}));
+    scaleBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "phrygian", "blues", "hirajoshi"}));
 
     particlesLabel.setFont(new java.awt.Font("Lucida Sans", 0, 24)); 
     musicLabel.setFont(new java.awt.Font("Lucida Sans", 0, 24)); 
@@ -350,109 +352,143 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
     mainInstrBox.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); 
     mainInstrBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "piano", "harp", "celesta" }));
 
-    javax.swing.GroupLayout layout = new javax.swing.GroupLayout(controls);
-    controls.setLayout(layout);
-    layout.setHorizontalGroup(
-      layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-      .addGroup(layout.createSequentialGroup()
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addGroup(layout.createSequentialGroup()
+    tipsButton.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); // NOI18N
+    tipsButton.setBackground(new Color(204,204,204));
+    tipsButton.setForeground(new java.awt.Color(69, 69, 69));
+    tipsButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+    tipsButton.setOpaque(false);
+
+    separator.setOrientation(javax.swing.SwingConstants.VERTICAL);
+    separator.setToolTipText("");
+
+        backgroundInstrBox.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); // NOI18N
+        backgroundInstrBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "harp", "space", "celesta" }));
+
+        backgroundInstrLabel.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); // NOI18N
+        backgroundInstrLabel.setText("background instrument");
+
+        scaleLabel.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); // NOI18N
+        scaleLabel.setText("scale");
+
+        mainInstrLabel.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); // NOI18N
+        mainInstrLabel.setText("main instrument");
+
+        mainInstrBox.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); // NOI18N
+        mainInstrBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "piano", "harp", "celesta" }));
+        mainInstrBox.setPreferredSize(new java.awt.Dimension(150, 45));
+
+        sampleButton.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); // NOI18N
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(controls);
+        controls.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(74, 74, 74)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(30, 30, 30)
+                                    .addComponent(speedLabel)
+                                    .addGap(3, 3, 3))
+                                .addComponent(attractionLabel, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(alignmentLabel)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(repulsionLabel)))
+                        .addGap(20, 20, 20)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(speedSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(attractionSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(alignmentSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(repulsionSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(93, 93, 93))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(particlesLabel)
+                        .addGap(57, 57, 57)))
+                .addComponent(separator, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(86, 86, 86)
+                        .addComponent(musicLabel)
+                        .addContainerGap(274, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(231, 231, 231)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(scaleBox, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(mainInstrBox, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(mainInstrLabel)
+                                    .addComponent(backgroundInstrLabel)
+                                    .addComponent(scaleLabel))
+                                .addGap(27, 27, 27)
+                                .addComponent(backgroundInstrBox, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(tipsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27))))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                  .addGap(87, 87, 87)
-                  .addComponent(speedLabel)
-                  .addGap(3, 3, 3))
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                  .addGap(54, 54, 54)
-                  .addComponent(attractionLabel)))
-              .addGroup(layout.createSequentialGroup()
-                .addGap(57, 57, 57)
-                .addComponent(alignmentLabel))
-              .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(repulsionLabel)))
-            .addGap(20, 20, 20)
+                    .addContainerGap(989, Short.MAX_VALUE)
+                    .addComponent(sampleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(30, 30, 30)))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addComponent(musicLabel)
+                .addGap(38, 38, 38)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(scaleBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scaleLabel))
+                .addGap(24, 24, 24)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(mainInstrBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(mainInstrLabel))
+                .addGap(24, 24, 24)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(backgroundInstrBox, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(backgroundInstrLabel))
+                .addContainerGap(38, Short.MAX_VALUE))
+            .addComponent(separator)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addComponent(particlesLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(speedSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(speedLabel))
+                        .addGap(20, 20, 20)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(attractionSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(attractionLabel))
+                        .addGap(20, 20, 20)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(alignmentLabel)
+                            .addComponent(alignmentSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(20, 20, 20)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(repulsionSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(repulsionLabel))
+                        .addGap(43, 43, 43))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(tipsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(23, 23, 23))))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addComponent(speedSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-              .addComponent(attractionSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-              .addComponent(alignmentSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-              .addComponent(repulsionSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-          .addGroup(layout.createSequentialGroup()
-            .addGap(44, 44, 44)
-            .addComponent(particlesLabel)))
-        .addGap(71, 71, 71)
-        .addComponent(separator, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-          .addGroup(layout.createSequentialGroup()
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addGroup(layout.createSequentialGroup()
-                .addGap(86, 86, 86)
-                .addComponent(musicLabel))
-              .addGroup(layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(backgroundInstrLabel)
-                .addGap(18, 18, 18)
-                .addComponent(backgroundInstrBox, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)))
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-          .addGroup(layout.createSequentialGroup()
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-              .addGroup(layout.createSequentialGroup()
-                .addGap(62, 62, 62)
-                .addComponent(mainInstrLabel)
-                .addGap(31, 31, 31))
-              .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(scaleLabel)
-                .addGap(66, 66, 66)))
-            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-              .addComponent(scaleBox, 0, 150, Short.MAX_VALUE)
-              .addComponent(mainInstrBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
-            .addComponent(sampleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGap(40, 40, 40)))));
-
-layout.setVerticalGroup(
-  layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-  .addGroup(layout.createSequentialGroup()
-   .addGap(40, 40, 40)
-   .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-    .addComponent(particlesLabel)
-    .addComponent(musicLabel, javax.swing.GroupLayout.Alignment.TRAILING))
-   .addGap(40, 40, 40)
-   .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-     .addGroup(layout.createSequentialGroup()
-      .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addComponent(speedSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addComponent(speedLabel))
-      .addGap(25, 25, 25)
-      .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addComponent(attractionSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addComponent(attractionLabel))
-      .addGap(25, 25, 25)
-      .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addComponent(alignmentLabel)
-        .addComponent(alignmentSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-      .addGap(25, 25, 25)
-      .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addComponent(repulsionSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addComponent(repulsionLabel)))
-     .addGroup(layout.createSequentialGroup()
-      .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-        .addComponent(scaleBox, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addComponent(scaleLabel)
-        .addComponent(sampleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-      .addGap(23, 23, 23)
-      .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-        .addComponent(mainInstrBox, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-        .addComponent(mainInstrLabel))
-      .addGap(25, 25, 25)
-      .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-        .addComponent(backgroundInstrLabel)
-        .addComponent(backgroundInstrBox, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE))))
-   .addContainerGap(54, Short.MAX_VALUE))
-  .addComponent(separator));
-
+                .addGroup(layout.createSequentialGroup()
+                    .addGap(103, 103, 103)
+                    .addComponent(sampleButton, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(169, Short.MAX_VALUE)))
+        );
       /////////////////////////////////////////////
 
     }//initControlPanel
