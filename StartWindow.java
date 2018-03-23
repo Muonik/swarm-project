@@ -74,7 +74,7 @@ public class StartWindow extends JFrame {
 		});
 
         ////////// code generated using netbeans gui form //////////
-		setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         mainPanel.setLayout(new java.awt.CardLayout());
 
@@ -84,7 +84,7 @@ public class StartWindow extends JFrame {
 
         titleLabel.setFont(new java.awt.Font("Lucida Sans", 0, 48)); // NOI18N
         titleLabel.setForeground(new java.awt.Color(242, 242, 242));
-        titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
         titleLabel.setText("pseudo experimental music generator");
 
         startButton.setBackground(new java.awt.Color(233,233,233));
@@ -106,50 +106,50 @@ public class StartWindow extends JFrame {
 
         flockSizeLabel.setFont(new java.awt.Font("Lucida Sans", 0, 21)); // NOI18N
         flockSizeLabel.setForeground(new java.awt.Color(233, 233, 233));
-        flockSizeLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        flockSizeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         flockSizeLabel.setText("uhh how many particles you need?");
 
         whatIsThisButton.setBackground(new java.awt.Color(204, 204, 204));
         whatIsThisButton.setFont(new java.awt.Font("Lucida Sans", 0, 21)); // NOI18N
         whatIsThisButton.setForeground(new java.awt.Color(233, 233, 233));
         whatIsThisButton.setText("what is this?");
-        whatIsThisButton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        whatIsThisButton.setCursor(new java.awt.Cursor(Cursor.DEFAULT_CURSOR));
         whatIsThisButton.setOpaque(false);
 
-        javax.swing.GroupLayout defaultScreenLayout = new javax.swing.GroupLayout(defaultScreen);
+        GroupLayout defaultScreenLayout = new GroupLayout(defaultScreen);
         defaultScreen.setLayout(defaultScreenLayout);
         defaultScreenLayout.setHorizontalGroup(
-            defaultScreenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(titleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 1200, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, defaultScreenLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(defaultScreenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, defaultScreenLayout.createSequentialGroup()
-                        .addComponent(flockSizeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
+            defaultScreenLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(titleLabel, GroupLayout.DEFAULT_SIZE, 1200, Short.MAX_VALUE)
+            .addGroup(GroupLayout.Alignment.TRAILING, defaultScreenLayout.createSequentialGroup()
+                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(defaultScreenLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(GroupLayout.Alignment.TRAILING, defaultScreenLayout.createSequentialGroup()
+                        .addComponent(flockSizeLabel, GroupLayout.PREFERRED_SIZE, 455, GroupLayout.PREFERRED_SIZE)
                         .addGap(370, 370, 370))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, defaultScreenLayout.createSequentialGroup()
-                        .addComponent(flockSizeSlider, javax.swing.GroupLayout.PREFERRED_SIZE, 434, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(GroupLayout.Alignment.TRAILING, defaultScreenLayout.createSequentialGroup()
+                        .addComponent(flockSizeSlider, GroupLayout.PREFERRED_SIZE, 434, GroupLayout.PREFERRED_SIZE)
                         .addGap(379, 379, 379))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, defaultScreenLayout.createSequentialGroup()
-                        .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(GroupLayout.Alignment.TRAILING, defaultScreenLayout.createSequentialGroup()
+                        .addComponent(startButton, GroupLayout.PREFERRED_SIZE, 234, GroupLayout.PREFERRED_SIZE)
                         .addGap(480, 480, 480))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, defaultScreenLayout.createSequentialGroup()
-                        .addComponent(whatIsThisButton, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(GroupLayout.Alignment.TRAILING, defaultScreenLayout.createSequentialGroup()
+                        .addComponent(whatIsThisButton, GroupLayout.PREFERRED_SIZE, 190, GroupLayout.PREFERRED_SIZE)
                         .addGap(45, 45, 45))))
         );
         defaultScreenLayout.setVerticalGroup(
-            defaultScreenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            defaultScreenLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(defaultScreenLayout.createSequentialGroup()
                 .addGap(117, 117, 117)
-                .addComponent(titleLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(titleLabel, GroupLayout.PREFERRED_SIZE, 123, GroupLayout.PREFERRED_SIZE)
                 .addGap(145, 145, 145)
-                .addComponent(flockSizeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(flockSizeLabel, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE)
                 .addGap(19, 19, 19)
-                .addComponent(flockSizeSlider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(flockSizeSlider, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addGap(89, 89, 89)
-                .addComponent(startButton, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
-                .addComponent(whatIsThisButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(startButton, GroupLayout.PREFERRED_SIZE, 71, GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
+                .addComponent(whatIsThisButton, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
                 .addGap(70, 70, 70))
         );
 
@@ -157,7 +157,7 @@ public class StartWindow extends JFrame {
 
         aboutScreen.setOpaque(false);
 
-        textScrollPane.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        textScrollPane.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         textScrollPane.setOpaque(false);
         textScrollPane.getViewport().setOpaque(false);
 
@@ -169,7 +169,7 @@ public class StartWindow extends JFrame {
         aboutText.setRows(5);
         aboutText.setText("a java program that interactively plays\ntrashy experimental hipster music\nbased on couzin's model of flocking\n");
         aboutText.setAutoscrolls(false);
-        aboutText.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        aboutText.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
         aboutText.setOpaque(false);
         textScrollPane.setViewportView(aboutText);
 
@@ -180,41 +180,41 @@ public class StartWindow extends JFrame {
         okayGotItButton.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         okayGotItButton.setOpaque(false);
 
-        javax.swing.GroupLayout aboutScreenLayout = new javax.swing.GroupLayout(aboutScreen);
+        GroupLayout aboutScreenLayout = new GroupLayout(aboutScreen);
         aboutScreen.setLayout(aboutScreenLayout);
         aboutScreenLayout.setHorizontalGroup(
-            aboutScreenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            aboutScreenLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(aboutScreenLayout.createSequentialGroup()
                 .addContainerGap(401, Short.MAX_VALUE)
-                .addGroup(aboutScreenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, aboutScreenLayout.createSequentialGroup()
-                        .addComponent(textScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(aboutScreenLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(GroupLayout.Alignment.TRAILING, aboutScreenLayout.createSequentialGroup()
+                        .addComponent(textScrollPane, GroupLayout.PREFERRED_SIZE, 458, GroupLayout.PREFERRED_SIZE)
                         .addGap(341, 341, 341))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, aboutScreenLayout.createSequentialGroup()
-                        .addComponent(okayGotItButton, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(GroupLayout.Alignment.TRAILING, aboutScreenLayout.createSequentialGroup()
+                        .addComponent(okayGotItButton, GroupLayout.PREFERRED_SIZE, 190, GroupLayout.PREFERRED_SIZE)
                         .addGap(45, 45, 45))))
         );
         aboutScreenLayout.setVerticalGroup(
-            aboutScreenLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            aboutScreenLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(aboutScreenLayout.createSequentialGroup()
                 .addContainerGap(314, Short.MAX_VALUE)
-                .addComponent(textScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(textScrollPane, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                 .addGap(307, 307, 307)
-                .addComponent(okayGotItButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(okayGotItButton, GroupLayout.PREFERRED_SIZE, 60, GroupLayout.PREFERRED_SIZE)
                 .addGap(70, 70, 70))
         );
 
         mainPanel.add(aboutScreen, "aboutScreen");
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(mainPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+            layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+            .addComponent(mainPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
         );
 
         pack();

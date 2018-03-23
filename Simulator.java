@@ -127,12 +127,12 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
   public void playNote() throws MidiUnavailableException, InvalidMidiDataException {
     avr = flock.calcCentre();
     int pitch = (int)(avr.x / 16 + 30);
-    int loudness = (int)(-avr.y / 10 + 170);
+    int loudness = (int)(-avr.y / 10 + 160);
     
     channels[mainChnlNum].programChange(0,mainInstr); //bank and preset of the instrument 
 
     int rem = pitch % 12; 
-    int rand = (int)(8*Math.random()); //p(note is played) = 1/8
+    int rand = (int)(10*Math.random()); //p(note is played) = 1/8
     if(IntStream.of(currentScale).anyMatch(i -> i == rem) && rand == 0){
       channels[mainChnlNum].noteOn(pitch, loudness);
     }
@@ -157,14 +157,14 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
   public void playInvisibleFlock() throws MidiUnavailableException, InvalidMidiDataException {
     invisibleAvr = flock1.calcCentre();
     int pitch = (int)(invisibleAvr.x / 16 + 30);
-    int loudness = (int)(-invisibleAvr.y / 10 + 140);
+    int loudness = (int)(invisibleAvr.y / 10 + 110);
 
-    if (backgroundInstr == SPACE) loudness -= 145;
+    if (backgroundInstr == SPACE) loudness -= 110;
     
     channels[backgroundChnlNum].programChange(0,backgroundInstr); 
 
     int rem = pitch % 12; 
-    int rand = (int)(8*Math.random());
+    int rand = (int)(10*Math.random());
     if(IntStream.of(currentScale).anyMatch(i -> i == rem) && rand==0) {
       channels[backgroundChnlNum].noteOn(pitch, loudness);
     }
@@ -312,74 +312,71 @@ public class Simulator extends JFrame implements /*MouseListener,*/ MouseMotionL
     }
   });
 
-  //   pauseButton.addActionListener(new ActionListener() {
-  //    public void actionPerformed(ActionEvent e) {
-  //      if(!swarmMoving) {
-  //       sleep();
-  //      } 
-  //      else {
-
-  //     } 
-  //   }
-  // });
+    tipsButton.addActionListener(new ActionListener() {
+     public void actionPerformed(ActionEvent e) {
+      JDialog tipsDialog = new TipsDialog(new JFrame(), true);
+      tipsDialog.setVisible(true);
+      } 
+    
+  });
 
     //////////////code generated using netbeans swing gui form//////////////
 
-    setFont(new java.awt.Font("Lucida Sans", 0, 24)); 
-    setPreferredSize(new java.awt.Dimension(1200, 320));
+    setFont(new Font("Lucida Sans", 0, 24)); 
+    setPreferredSize(new Dimension(1200, 320));
 
-    scaleBox.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); 
-    scaleBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "phrygian", "blues", "hirajoshi"}));
+    scaleBox.setFont(new Font("Lucida Sans Unicode", 0, 18)); 
+    scaleBox.setModel(new DefaultComboBoxModel<>(new String[] { "phrygian", "blues", "hirajoshi"}));
 
-    particlesLabel.setFont(new java.awt.Font("Lucida Sans", 0, 24)); 
-    musicLabel.setFont(new java.awt.Font("Lucida Sans", 0, 24)); 
-    repulsionLabel.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); 
-    attractionLabel.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); 
-    alignmentLabel.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); 
-    speedLabel.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); 
-    sampleButton.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); 
+    particlesLabel.setFont(new Font("Lucida Sans", 0, 24)); 
+    musicLabel.setFont(new Font("Lucida Sans", 0, 24)); 
+    repulsionLabel.setFont(new Font("Lucida Sans Unicode", 0, 18)); 
+    attractionLabel.setFont(new Font("Lucida Sans Unicode", 0, 18)); 
+    alignmentLabel.setFont(new Font("Lucida Sans Unicode", 0, 18)); 
+    speedLabel.setFont(new Font("Lucida Sans Unicode", 0, 18)); 
+    sampleButton.setFont(new Font("Lucida Sans Unicode", 0, 18)); 
 
-    separator.setOrientation(javax.swing.SwingConstants.VERTICAL);
+    separator.setOrientation(SwingConstants.VERTICAL);
     separator.setToolTipText("");
 
-    backgroundInstrBox.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); 
-    backgroundInstrBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "harp", "space", "celesta" }));
+    backgroundInstrBox.setFont(new Font("Lucida Sans Unicode", 0, 18)); 
+    backgroundInstrBox.setModel(new DefaultComboBoxModel<>(new String[] { "harp", "space", "celesta" }));
 
-    backgroundInstrLabel.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); 
-    scaleLabel.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); 
-    mainInstrLabel.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); 
+    backgroundInstrLabel.setFont(new Font("Lucida Sans Unicode", 0, 18)); 
+    scaleLabel.setFont(new Font("Lucida Sans Unicode", 0, 18)); 
+    mainInstrLabel.setFont(new Font("Lucida Sans Unicode", 0, 18)); 
 
-    mainInstrBox.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); 
-    mainInstrBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "piano", "harp", "celesta" }));
+    mainInstrBox.setFont(new Font("Lucida Sans Unicode", 0, 18)); 
+    mainInstrBox.setModel(new DefaultComboBoxModel<>(new String[] { "piano", "harp", "celesta" }));
 
-    tipsButton.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); // NOI18N
+    tipsButton.setFont(new Font("Lucida Sans Unicode", 0, 18)); // NOI18N
     tipsButton.setBackground(new Color(204,204,204));
-    tipsButton.setForeground(new java.awt.Color(69, 69, 69));
-    tipsButton.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+    tipsButton.setForeground(new Color(69, 69, 69));
+    tipsButton.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
     tipsButton.setOpaque(false);
 
-    separator.setOrientation(javax.swing.SwingConstants.VERTICAL);
+    separator.setOrientation(SwingConstants.VERTICAL);
     separator.setToolTipText("");
 
-        backgroundInstrBox.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); // NOI18N
-        backgroundInstrBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "harp", "space", "celesta" }));
+        backgroundInstrBox.setFont(new Font("Lucida Sans Unicode", 0, 18)); // NOI18N
+        backgroundInstrBox.setModel(new DefaultComboBoxModel<>(new String[] { "harp", "space", "celesta" }));
 
-        backgroundInstrLabel.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); // NOI18N
+        backgroundInstrLabel.setFont(new Font("Lucida Sans Unicode", 0, 18)); // NOI18N
         backgroundInstrLabel.setText("background instrument");
 
-        scaleLabel.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); // NOI18N
+        scaleLabel.setFont(new Font("Lucida Sans Unicode", 0, 18)); // NOI18N
         scaleLabel.setText("scale");
 
-        mainInstrLabel.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); // NOI18N
+        mainInstrLabel.setFont(new Font("Lucida Sans Unicode", 0, 18)); // NOI18N
         mainInstrLabel.setText("main instrument");
 
-        mainInstrBox.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); // NOI18N
-        mainInstrBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "piano", "harp", "celesta" }));
-        mainInstrBox.setPreferredSize(new java.awt.Dimension(150, 45));
+        mainInstrBox.setFont(new Font("Lucida Sans Unicode", 0, 18)); // NOI18N
+        mainInstrBox.setModel(new DefaultComboBoxModel<>(new String[] { "piano", "harp", "celesta" }));
+        mainInstrBox.setPreferredSize(new Dimension(150, 45));
 
-        sampleButton.setFont(new java.awt.Font("Lucida Sans Unicode", 0, 18)); // NOI18N
+        sampleButton.setFont(new Font("Lucida Sans Unicode", 0, 18)); // NOI18N
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(controls);
+        GroupLayout layout = new GroupLayout(controls);
         controls.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
